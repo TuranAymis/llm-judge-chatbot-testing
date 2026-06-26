@@ -3,34 +3,58 @@ import os
 import re
 from docx import Document
 
-def clean_text(text):
-    return re.sub(r'^\d+[\.\)]\s*', '', text).strip()
 
-def extract_keywords(text):
-    """Metinden gerçekten ayırt edici olan (sayı, telefon, teknik terim) anahtar kelimeleri seçer."""
-    text = text.lower()
-    
-    # 1. Önce sayıları yakala (15, 0850, 255 vb. - Bunlar botun cevabındaki en kesin verilerdir)
-    numbers = re.findall(r'\d+', text)
-    
-    # 2. Kelimeleri ayıkla (En az 4 karakterli ve sadece harfler)
-    words = re.findall(r'\b[a-zçğıöşü]{4,}\b', text)
-    
-    # 3. "Stopwords" - Botun her cümlede kullandığı ama ayırt edici olmayan kelimeleri ele
-    ignored_words = {
-        "aldığınız", "içerisinde", "itibaren", "edebilirsiniz", "yeterlidir", 
-        "sağlayacaktır", "durumda", "olmaktan", "şunları", "yapılan", "işlemleri",
-        "genellikle", "kapsamında", "ilgili", "boyu", "sırasında", "olan", "veya",
-        "kadar", "yeterli", "tarafından", "mevcut", "üzerinden", "gerekli", "için"
-    }
-    
-    filtered_words = [w for w in words if w not in ignored_words]
-    
-    # 4. Sayıları ve önemli kelimeleri birleştir (Sayılar öncelikli)
-    all_keywords = list(dict.fromkeys(numbers + filtered_words))
-    
-    # En vurucu 12 anahtar kelimeyi döndür
-    return all_keywords[:12]
+QUESTION_NUMBER_RE = re.compile(r"^\d+[\.\)]\s*")
+STEP_PREFIX_RE = re.compile(r"^\d+[️⃣]\s*")
+PHONE_OR_TIME_LINE_RE = re.compile(r"^[\d\s\-\–:\(\)]+$")
+
+
+def clean_text(text):
+    return QUESTION_NUMBER_RE.sub("", text).strip()
+
+
+def is_question_line(text):
+    """
+    Sadece gerçek soru başlıklarını yakalamaya çalışır.
+    Cevap içindeki adım/liste satırlarını ve teknik satırları dışlar.
+    """
+    t = text.strip()
+    if not t:
+        return False
+
+    # Güvenli tarafta kalmak için soru cümlesi sonu zorunlu.
+    if not t.endswith("?"):
+        return False
+
+    lowered = t.lower()
+    if lowered.startswith(("http://", "https://", "www.")) or "@" in t:
+        return False
+    if t.startswith(("🔗", "-", "•")):
+        return False
+    if STEP_PREFIX_RE.match(t):
+        return False
+    if PHONE_OR_TIME_LINE_RE.fullmatch(t):
+        return False
+
+    without_index = QUESTION_NUMBER_RE.sub("", t).strip()
+    if len(without_index) < 8:
+        return False
+    if without_index.count("?") > 1:
+        return False
+
+    return True
+
+
+def append_qa_record(qa_list, question_text, answer_lines):
+    if not question_text:
+        return
+    full_answer = "\n".join(answer_lines).strip()
+    if not full_answer:
+        return
+    qa_list.append({
+        "soru": clean_text(question_text),
+        "cevap": full_answer,
+    })
 
 def convert_word_to_json():
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -49,35 +73,27 @@ def convert_word_to_json():
 
     for para in doc.paragraphs:
         text = para.text.strip()
-        if not text: continue
+        if not text:
+            continue
 
-        if re.match(r'^\d+[\.\)]', text) or text.endswith('?'):
-            if current_question:
-                full_answer = "\n".join(current_answer).strip()
-                qa_list.append({
-                    "soru": clean_text(current_question),
-                    "cevap": full_answer,
-                    "keywords": extract_keywords(full_answer)
-                })
+        if is_question_line(text):
+            append_qa_record(qa_list, current_question, current_answer)
             current_question = text
             current_answer = []
-        else:
-            if current_question:
-                current_answer.append(text)
+            continue
 
-    if current_question:
-        full_answer = "\n".join(current_answer).strip()
-        qa_list.append({
-            "soru": clean_text(current_question),
-            "cevap": full_answer,
-            "keywords": extract_keywords(full_answer)
-        })
+        # Henüz soru yakalanmadıysa cevap biriktirme.
+        if current_question is None:
+            continue
+        current_answer.append(text)
+
+    append_qa_record(qa_list, current_question, current_answer)
 
     os.makedirs(os.path.dirname(json_path), exist_ok=True)
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(qa_list, f, ensure_ascii=False, indent=4)
 
-    print(f"İşlem tamam! {len(qa_list)} soru ve akıllı anahtar kelimeler kaydedildi.")
+    print(f"İşlem tamam! {len(qa_list)} soru-cevap kaydedildi.")
 
 if __name__ == "__main__":
     convert_word_to_json()

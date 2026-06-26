@@ -3,3 +3,8 @@ pytest
 pytest-playwright
 allure-pytest
 python-docx
+google-genai>=1.0
+openai
+pandas
+python-dotenv
+openpyxl
