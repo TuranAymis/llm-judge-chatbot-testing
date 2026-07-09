@@ -1,4 +1,4 @@
-# Python cache/bytecode
+# Python cache / bytecode
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,10 +6,10 @@ __pycache__/
 # Virtual environments
 .venv/
 venv/
-ENV/
 env/
+ENV/
 
-# Environment/secrets
+# Environment / secrets
 .env
 .env.*
 !.env.example
@@ -20,6 +20,7 @@ env/
 .ruff_cache/
 .coverage
 .coverage.*
+coverage.xml
 htmlcov/
 
 # Playwright artifacts
@@ -29,10 +30,17 @@ test-results/
 # Allure artifacts
 allure-report/
 allure-results/
+reports/
 reports/allure-results/
 reports/allure-report/
 
-# IDE/editor files
+# Local/private test data
+testData.docx
+*.docx
+*.xlsx
+*.csv
+
+# IDE / editor files
 .idea/
 .vscode/
 *.swp
@@ -42,42 +50,6 @@ reports/allure-report/
 .DS_Store
 Thumbs.db
 
-# Local debug session logs
-debug-bc5ef2.log
+# Local debug logs
 debug-*.log
-
-# Python virtual environments
-.venv/
-venv/
-env/
-ENV/
-
-# Python cache
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-
-# Test and report outputs
-allure-report/
-allure-results/
-reports/
-htmlcov/
-coverage.xml
-.coverage
-
-# Environment files
-.env
-.env.*
-!.env.example
-
-# IDE / OS files
-.idea/
-.vscode/
-.DS_Store
-Thumbs.db
-
-# Local/private test data
-testData.docx
-*.docx
+*.log
