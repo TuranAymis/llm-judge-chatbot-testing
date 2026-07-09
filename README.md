@@ -1,4 +1,4 @@
-# LLM Judge Chatbot Testing
+# LLM Judge Chatbot Testing |[Türkçe](README_TR.md)|
 
 A Python-based QA automation project for testing chatbot responses with structured mock test data and LLM-based evaluation.
 
