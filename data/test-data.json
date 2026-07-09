@@ -1,0 +1,10 @@
+[
+  {
+    "soru": "What are the main benefits of automated testing in a software project?",
+    "cevap": "Automated testing provides faster feedback, repeatable test execution, better regression coverage, and helps teams detect issues earlier."
+  },
+  {
+    "soru": "What is the difference between smoke testing and regression testing?",
+    "cevap": "Smoke testing checks whether the most critical functions work after a build, while regression testing checks that existing features still work after changes."
+  }
+]
