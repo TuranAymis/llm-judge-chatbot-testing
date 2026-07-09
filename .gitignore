@@ -45,3 +45,35 @@ Thumbs.db
 # Local debug session logs
 debug-bc5ef2.log
 debug-*.log
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test and report outputs
+allure-report/
+allure-results/
+reports/
+htmlcov/
+coverage.xml
+.coverage
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# IDE / OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
