@@ -77,3 +77,7 @@ coverage.xml
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local/private test data
+testData.docx
+*.docx

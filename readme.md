@@ -45,6 +45,6 @@ allure serve reports/allure-results
 
 allure generate reports/allure-results --clean --single-file
 
-# testData.docx deki soru cevapları test-data.json formatına dönüştürüyor
+# Mock soru-cevap verileri data/test-data.json içinde tutulur
 
 python .\scripts\converter.py
