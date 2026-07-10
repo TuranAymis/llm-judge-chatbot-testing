@@ -1,5 +1,7 @@
 # LLM Judge Chatbot Testing | [English](README.md) |
 
+![CI](https://github.com/TuranAymis/llm-judge-chatbot-testing/actions/workflows/ci.yml/badge.svg)
+
 Chatbot cevaplarını yapılandırılmış mock test verileri ve LLM tabanlı değerlendirme yaklaşımıyla test etmek için hazırlanmış Python tabanlı bir QA automation projesidir.
 
 Bu repository, chatbot cevaplarının tekrar edilebilir bir test akışıyla nasıl kontrol edilebileceğini gösterir. Projede Playwright, Pytest, JSON test verisi, Allure raporlama ve opsiyonel LLM judge yaklaşımı kullanılır.
