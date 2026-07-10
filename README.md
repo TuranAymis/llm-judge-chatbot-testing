@@ -1,4 +1,5 @@
 # LLM Judge Chatbot Testing |[Türkçe](README_TR.md)|
+![CI](https://github.com/TuranAymis/llm-judge-chatbot-testing/actions/workflows/ci.yml/badge.svg)
 
 A Python-based QA automation project for testing chatbot responses with structured mock test data and LLM-based evaluation.
 
